@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Scripts/StateLog/Editor/StateLogEditor/Sub/SLogCategoryView.uss?fileID=7433441132597879392&amp;guid=93d137176c40f934d84b1ba0ed96e211&amp;type=3#SLogCategoryView" />
+    <ui:ListView focusable="true" show-alternating-row-backgrounds="ContentOnly" show-border="false" name="log-list" virtualization-method="DynamicHeight" show-foldout-header="true" header-title="Category" show-bound-collection-size="false" style="margin-bottom: 2px;" />
+</ui:UXML>

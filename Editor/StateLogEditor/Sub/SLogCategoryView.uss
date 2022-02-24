@@ -1,0 +1,7 @@
+#unity-list-view__foldout-header.unity-foldout {
+    background-color: rgb(33, 55, 65);
+}
+
+#unity-content {
+    background-color: rgba(56, 56, 56, 255);
+}

@@ -1,0 +1,18 @@
+{
+    "name": "StateLog.Editor",
+    "rootNamespace": "StateLog",
+    "references": [
+        "GUID:525f834662636b240b78e3361f0927c3"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

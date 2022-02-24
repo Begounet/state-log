@@ -1,0 +1,13 @@
+{
+  "name": "com.apperture.state-log",
+  "displayName": "State Log",
+  "version": "1.0.0",
+  "unity": "2021.2",
+  "description": "Output the logs into a file that can be analyzed in the State Log Viewer. Can declare state point in the application to split logs into categories.",
+  "keywords": [
+  ],
+  "author": "Arnaud Begue",
+  "hideInEditor": false,
+  "homepage": "",
+  "type": ""
+}
