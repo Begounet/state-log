@@ -10,10 +10,19 @@ namespace StateLog
 
         private static LogData _logData;
         private static LogStepData _currentLogStep;
+        private static StateLogSettings _settings;
+
+        private static bool IsEnabled => _settings.Enabled;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         public static void Init()
         {
+            _settings = StateLogSettings.GetSettings();
+            if (!_settings.Enabled)
+            {
+                return;
+            }
+
             if (_logData == null)
             {
                 _logData = new LogData();
@@ -26,12 +35,18 @@ namespace StateLog
 
         public static void StartStep(string stepName)
         {
-            Init();
+            if (!IsEnabled) return;
+
+            Init();            
             _currentLogStep = new LogStepData() { Name = stepName };
             _logData.Steps.Add(_currentLogStep);
         }
 
-        private static void OnApplicationQuit() => DumpLogData();
+        private static void OnApplicationQuit()
+        {
+            DumpLogData();
+            _settings = null;
+        }
 
         private static void OnLogMessageReceived(string condition, string stackTrace, LogType logType)
         {
@@ -48,6 +63,8 @@ namespace StateLog
 
         private static void DumpLogData()
         {
+            if (!IsEnabled) return;
+
             string jLogData = JsonUtility.ToJson(_logData, prettyPrint: true);
 
             int counter = 0;
@@ -60,7 +77,11 @@ namespace StateLog
             CreateLogDirectoryIFN(filePath);
 
             File.WriteAllText(filePath, jLogData);
-            Debug.Log($"Dump state log: {filePath}");
+
+            if (_settings.LogOutputDestination)
+            {
+                Debug.Log($"Dump state log: {filePath}");
+            }
         }
 
         private static void CreateLogDirectoryIFN(string filePath)

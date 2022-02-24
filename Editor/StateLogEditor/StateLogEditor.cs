@@ -63,15 +63,6 @@ namespace StateLog
             });
         }
 
-        private void OnSelectionChange()
-        {
-            LogDataAsset logDataAsset = Selection.activeObject as LogDataAsset;
-            if (logDataAsset)
-            {
-                LoadLogData(logDataAsset.Data);
-            }
-        }
-
         public void LoadLogData(LogData data)
         {
             _inspectorView.ClearSteps();
