@@ -12,7 +12,8 @@ namespace StateLog
         private static LogStepData _currentLogStep;
         private static StateLogSettings _settings;
 
-        private static bool IsEnabled => _settings.Enabled;
+        private static bool IsEnabled => (_settings?.Enabled ?? false);
+        private static string LogFilePath = string.Empty;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         public static void Init()
@@ -29,15 +30,17 @@ namespace StateLog
                 _logData.Steps = new List<LogStepData>();
 
                 Application.logMessageReceived += OnLogMessageReceived;
+                Application.focusChanged += OnApplicationFocusChanged;
                 Application.quitting += OnApplicationQuit;
             }
         }
 
         public static void StartStep(string stepName)
         {
+            Init();
+
             if (!IsEnabled) return;
 
-            Init();            
             _currentLogStep = new LogStepData() { Name = stepName };
             _logData.Steps.Add(_currentLogStep);
         }
@@ -45,7 +48,14 @@ namespace StateLog
         private static void OnApplicationQuit()
         {
             DumpLogData();
-            _settings = null;
+        }
+
+        private static void OnApplicationFocusChanged(bool hasFocus)
+        {
+            if (!hasFocus)
+            {
+                DumpLogData();
+            }
         }
 
         private static void OnLogMessageReceived(string condition, string stackTrace, LogType logType)
@@ -65,23 +75,31 @@ namespace StateLog
         {
             if (!IsEnabled) return;
 
+            CacheOutputFilePath();
+
             string jLogData = JsonUtility.ToJson(_logData, prettyPrint: true);
 
-            int counter = 0;
-            string filePath;
-            do
-            {
-                filePath = Path.Combine(Application.persistentDataPath, string.Format(StateLogNameFormat, ++counter));
-            } while (File.Exists(filePath));
-
-            CreateLogDirectoryIFN(filePath);
-
-            File.WriteAllText(filePath, jLogData);
+            CreateLogDirectoryIFN(LogFilePath);
+            File.WriteAllText(LogFilePath, jLogData);
 
             if (_settings.LogOutputDestination)
             {
-                Debug.Log($"Dump state log: {filePath}");
+                Debug.Log($"Dump state log: {LogFilePath}");
             }
+        }
+
+        private static void CacheOutputFilePath()
+        {
+            if (!string.IsNullOrEmpty(LogFilePath))
+            {
+                return;
+            }
+
+            int counter = 0;
+            do
+            {
+                LogFilePath = Path.Combine(Application.persistentDataPath, string.Format(StateLogNameFormat, ++counter));
+            } while (File.Exists(LogFilePath));
         }
 
         private static void CreateLogDirectoryIFN(string filePath)
