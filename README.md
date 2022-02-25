@@ -26,5 +26,12 @@ Run your application. When the application is closed, a file is generated `{Appl
 
 *Here, we used `SLog.StartStep("Start")`, `SLog.StartStep("Menu.ClientAppDataLoading")` and `SLog.StartStep("Menu.LicenseActivation")`. All logs generated after these calls are put in this state.*
 
+## Known Issues
 
+### EditorGUIUtility.AddCursorRect
 
+This error messsage `EditorGUIUtility.AddCursorRect called outside an editor OnGUI` can sometimes appear. It is because the stacktrace view uses an IMGUI field (`EditorGUILayout.SelectableLabel`) and makes this `AddCursorRect` call while not being in a IMGUI context.
+
+You can ignore it, since it is editor only and do not cause any issues while using the State Log Viewer.
+
+*Note: Even with a try-catch around the IMGUI call, the error message is still present. Probably because the exception itself is not raised from the `EditorGUILayout.SelectableField` call but later, during an IMGUI context setup.*
